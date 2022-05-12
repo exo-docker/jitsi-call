@@ -1,5 +1,5 @@
 FROM exoplatform/jdk:11-ubuntu-2004
-ARG JITSI_CALL_VERSION=1.2.x-SNAPSHOT
+ARG JITSI_CALL_VERSION=1.2.0-20220512
 COPY download.sh /
 RUN chmod u+x /download.sh
 #Disable caching for /download.sh
