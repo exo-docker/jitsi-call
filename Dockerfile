@@ -1,4 +1,4 @@
-FROM exoplatform/jdk:11-ubuntu-2004
+FROM exoplatform/jdk:11-ubuntu-2204
 ARG JITSI_CALL_VERSION=1.2.x-SNAPSHOT
 COPY download.sh /
 RUN chmod u+x /download.sh
