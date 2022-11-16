@@ -1,5 +1,5 @@
 FROM exoplatform/jdk:11-ubuntu-2004
-ARG JITSI_CALL_VERSION=1.2.x-SNAPSHOT
+ARG JITSI_CALL_VERSION=1.2.3-RC01
 COPY download.sh /
 RUN chmod u+x /download.sh
 RUN /download.sh
