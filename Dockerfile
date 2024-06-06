@@ -1,5 +1,5 @@
 FROM exoplatform/jdk:21-ubuntu-2204
-ARG JITSI_CALL_VERSION=7.0.0-M19
+ARG JITSI_CALL_VERSION=7.0.0-M20
 COPY download.sh /
 RUN chmod u+x /download.sh
 RUN /download.sh
