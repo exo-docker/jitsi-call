@@ -1,4 +1,4 @@
-FROM exoplatform/jdk:21-ubuntu-2404
+FROM azul/zulu-openjdk-alpine:21-latest
 ARG JITSI_CALL_VERSION=7.2.0-M16
 COPY download.sh /
 RUN chmod u+x /download.sh
