@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/sh -eux
 echo "Downloading Jitsi Call App version ${JITSI_CALL_VERSION}"
 GROUP_ID=org.exoplatform
 ARTIFACT_ID=jitsi-call
