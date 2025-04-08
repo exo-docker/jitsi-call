@@ -4,4 +4,4 @@ COPY download.sh /
 RUN chmod u+x /download.sh
 RUN /download.sh
 HEALTHCHECK CMD curl --fail http://localhost || exit 1
-ENTRYPOINT ["java", "-jar", "/jitsi-call.jar"]
+ENTRYPOINT ["java", "--add-opens", "java.base/java.io=ALL-UNNAMED", "-jar", "/jitsi-call.jar"]
