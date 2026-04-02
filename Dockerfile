@@ -1,5 +1,5 @@
 FROM azul/zulu-openjdk-alpine:21-latest
-ARG JITSI_CALL_VERSION=7.2.0-M22
+ARG JITSI_CALL_VERSION=7.2.0-M23
 COPY download.sh /
 RUN chmod u+x /download.sh
 RUN /download.sh
