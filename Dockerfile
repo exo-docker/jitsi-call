@@ -1,4 +1,4 @@
-FROM exoplatform/jdk:21-ubuntu-2404
+FROM exoplatform/jdk:21-ubuntu-2604
 ARG JITSI_CALL_VERSION=7.2.0-M26
 COPY download.sh /
 RUN chmod u+x /download.sh
