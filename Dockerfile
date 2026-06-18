@@ -1,6 +1,6 @@
 FROM azul/zulu-openjdk-alpine:21-latest
 
-ARG JITSI_CALL_VERSION=7.2.0-RC01
+ARG JITSI_CALL_VERSION=7.2.0-RC02
 
 # Install tini for proper init (signal forwarding + zombie reaping)
 # and curl for the healthcheck, in a single layer with no extra cache
