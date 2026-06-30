@@ -4,9 +4,9 @@ on:
   push:
     tags:
       - '*'
-    branches: [ master ]
+    branches: [ 7.2.x ]
 env:
-  BRANCH_BUILD_TAGS: "latest"
+  BRANCH_BUILD_TAGS: "7.2_latest"
   DOCKER_IMAGE: "exoplatform/jitsi"
 
 jobs:
