@@ -32,3 +32,50 @@ In order to verify the signature of the eXo Jitsi docker image, please install t
     ```json
     [{"critical":{"identity":{"docker-reference":"index.docker.io/exoplatform/jitsi"},"image":{"docker-manifest-digest":"sha256:ae757647ebea57ded85bc8c5a3a1b131291bc53b6ee5de6c19aae86a822820fd"},"type":"cosign container image signature"},"optional":{"Bundle":{"SignedEntryTimestamp":"MEUCIHJm3s5x6voPUhV6kdz6PcFneu3CMhSB9+xkqU7jHpJnAiEAkcYgWYtyCwzAg0SsKkphAT5c1OjGAQKvfSkoWN5+K88=","Payload":{"body":"eyJhcGlWZXJzaW9uIjoiMC4wLjEiLCJraW5kIjoiaGFzaGVkcmVrb3JkIiwic3BlYyI6eyJkYXRhIjp7Imhhc2giOnsiYWxnb3JpdGhtIjoic2hhMjU2IiwidmFsdWUiOiJkMTU1MWJjMjVhY2UxNWJmYzc5Nzc1ZDlmMjY1NGQyMmVhNDllYzEzN2JkZTg2MGRlNzZiZDU5M2FjM2NkZmE1In19LCJzaWduYXR1cmUiOnsiY29udGVudCI6Ik1FVUNJUUREbmdLN1ZRbC9iZVBrclZ1M3QramlUNjltYVV3RW5rN0ZRcnZUbXhIL0t3SWdRRzM5MDV3TzJCUk5mSDRQL0NrckZOL3lZamw4L2U4YXhmcURUSFFiaDVVPSIsInB1YmxpY0tleSI6eyJjb250ZW50IjoiTFMwdExTMUNSVWRKVGlCUVZVSk1TVU1nUzBWWkxTMHRMUzBLVFVacmQwVjNXVWhMYjFwSmVtb3dRMEZSV1VsTGIxcEplbW93UkVGUlkwUlJaMEZGWjFsTFVqZFRiMWRpV0dwSWVXRXhRbU15U1dnemExZzRkM1k0ZHdwWk4xTjBZVlp6VWxoNlltTkpUREJxUlVOcFMzcExZWEpRZUZGUk5qbDFWbTFhTm1Nd1NrVldVV2hDWlU0NWR6TndjamMxUkRSdk1pOUJQVDBLTFMwdExTMUZUa1FnVUZWQ1RFbERJRXRGV1MwdExTMHRDZz09In19fX0=","integratedTime":1785423063,"logIndex":2291370628,"logID":"c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"}}}}]
     ```
+
+### Notation (Notary Project)
+
+The images published on Docker Hub (`exoplatform/jitsi`) are also signed with [Notation](https://notaryproject.dev) (Notary Project), as an alternative to cosign. One signature covers every tag pointing at the same digest.
+
+To verify an image, install the `notation` command line tool, then:
+
+1. Download the eXo signing certificate ([`notation-signing.crt`](https://raw.githubusercontent.com/exo-docker/jitsi-call/master/notation-signing.crt), also published at <https://www.exoplatform.com/security/container-signing-notation.crt>) and check its fingerprint:
+
+    ```bash
+    openssl x509 -in notation-signing.crt -noout -fingerprint -sha256
+    ```
+
+    ```text
+    sha256 Fingerprint=8C:A6:2F:D8:F3:3D:45:C4:47:F2:35:82:2A:08:20:89:70:95:DE:CF:0F:04:5A:0C:C8:96:20:D8:2E:76:9C:4E
+    ```
+
+    Then add it to a trust store:
+
+    ```bash
+    notation cert add --type ca --store exo notation-signing.crt
+    ```
+
+2. Import a trust policy that scopes the certificate to the eXo Jitsi image (`trustpolicy.json`):
+
+    ```json
+    {
+      "version": "1.0",
+      "trustPolicies": [{
+        "name": "exo",
+        "registryScopes": ["docker.io/exoplatform/jitsi"],
+        "signatureVerification": {"level": "strict"},
+        "trustStores": ["ca:exo"],
+        "trustedIdentities": ["*"]
+      }]
+    }
+    ```
+
+    ```bash
+    notation policy import trustpolicy.json
+    ```
+
+3. Verify the image:
+
+    ```bash
+    notation verify docker.io/exoplatform/jitsi:<tag>
+    ```
