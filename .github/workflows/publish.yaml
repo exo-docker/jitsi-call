@@ -78,6 +78,8 @@ jobs:
       - build-platforms
     permissions:
       actions: read
+    outputs:
+      digest: ${{ steps.merge.outputs.digest }}
     steps:
       - uses: actions/download-artifact@v8
         with:
@@ -88,9 +90,28 @@ jobs:
           name: arm64-digest
           path: /tmp/digests
       - uses: exo-actions/buildDockerImage-action/merge-manifest@v1
+        id: merge
         with:
           dockerImage: ${{ env.DOCKER_IMAGE }}
           dockerImageTag: ${{ needs.parse-docker-build-env.outputs.buildTags }}
           digestsDir: /tmp/digests
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  notation-dockerhub:
+    name: "Notation sign Docker Hub image"
+    runs-on: ubuntu-latest
+    permissions: {}
+    needs:
+      - merge-manifest
+    steps:
+      - uses: exo-actions/buildDockerImage-action/notation-image@v1
+        with:
+          dockerImage: ${{ env.DOCKER_IMAGE }}
+          dockerImageDigest: ${{ needs.merge-manifest.outputs.digest }}
+          dockerRegistry: docker.io
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          notationImage: true
+          signingKey: ${{ secrets.NOTATION_SIGNING_KEY }}
+          signingCert: ${{ secrets.NOTATION_SIGNING_CERT }}
